@@ -1,0 +1,13 @@
+#!/usr/bin/env php
+<?php
+
+global $db;
+
+require_once __DIR__ . '/src/init.php';
+require_once __DIR__ . '/src/shell.php';
+
+$db = init();
+
+echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
+
+main();
