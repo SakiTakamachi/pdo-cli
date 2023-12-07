@@ -50,7 +50,7 @@ function parseResult(array $resultSet): void
     
     echo "|";
     foreach ($header as $key => $value) {
-        echo ' '.str_pad($value, $lengths[$key], ' ', STR_PAD_LEFT).' |';
+        echo ' '.str_pad($value, $lengths[$key], ' ', STR_PAD_RIGHT).' |';
     }
     echo "\n";
 
@@ -63,7 +63,7 @@ function parseResult(array $resultSet): void
     foreach ($resultSet as $row) {
         echo "|";
         foreach ($row as $key => $value) {
-            echo ' '.str_pad($value, $lengths[$key], ' ', STR_PAD_LEFT).' |';
+            echo ' '.str_pad($value, $lengths[$key], ' ', STR_PAD_RIGHT).' |';
         }
         echo "\n";
     }
