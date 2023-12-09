@@ -15,9 +15,12 @@ function init(): PDO
     if (! isset($connection['db_type'], $connection['dsn'])) {
         throw new Exception('DB type or DSN is not set');
     }
-    
+
     try {
-        $db = new PDO($connection['db_type'].':'.$connection['dsn'], $connection['username'] ?? null, $connection['password'] ?? null);
+        $db = new PDO($connection['db_type'].':'.$connection['dsn'], $connection['username'] ?? null, $connection['password'] ?? null, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_STRINGIFY_FETCHES => true,
+        ]);
         if (! $db) die("No connection\n");
     } catch (PDOException $e) {
         die($e->getMessage()."\n");
