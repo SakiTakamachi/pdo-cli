@@ -1,6 +1,6 @@
 <?php
 
-function init(?string $configSuffix): PDO
+function init(?string $configSuffix, bool $shouldOutputAsPDOType): PDO
 {
     if (! extension_loaded('pdo')) {
         throw new Exception('PDO extension is not loaded');
@@ -20,7 +20,7 @@ function init(?string $configSuffix): PDO
     try {
         $db = new PDO($connection['db_type'].':'.$connection['dsn'], $connection['username'] ?? null, $connection['password'] ?? null, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_STRINGIFY_FETCHES => true,
+            PDO::ATTR_STRINGIFY_FETCHES => !$shouldOutputAsPDOType,
         ]);
         if (! $db) die("No connection\n");
     } catch (PDOException $e) {

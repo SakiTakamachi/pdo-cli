@@ -1,6 +1,6 @@
 <?php
 
-function exec_sql(string $sql): void
+function exec_sql(string $sql, bool $shouldOutputAsPDOType): void
 {
     /** @var PDO $db */
     global $db;
@@ -30,15 +30,17 @@ function exec_sql(string $sql): void
     }
 
     $columns = [];
+    $types = [];
     for ($counter = 0; $counter < $count; $counter ++) {
         $meta = $stmt->getColumnMeta($counter);
         $columns[] = $meta['name'];
+        $types[] = $meta['pdo_type'] ?? null; // Fallback to null if driver is not compatible
     }
 
-    parseResult($columns, $r);
+    parseResult($columns, $types, $r, $shouldOutputAsPDOType);
 }
 
-function parseResult(array $columns, array $resultSet): void
+function parseResult(array $columns, array $types, array $resultSet, bool $shouldOutputAsPDOType): void
 {
     $header = [];
     $lengths = [];
@@ -47,8 +49,12 @@ function parseResult(array $columns, array $resultSet): void
         $lengths[$key] = strlen($value);
     }
 
-    foreach ($resultSet as $row) {
+    foreach ($resultSet as $i => $row) {
         foreach ($row as $key => $value) {
+            if($shouldOutputAsPDOType) {
+                $value = generateJsonValue($value, $types[$key]);
+                $resultSet[$i][$key] = $value;
+            }
             $lengths[$key] = max($lengths[$key], strlen(is_null($value) ? 'NULL' : $value));
         }
     }
@@ -84,4 +90,14 @@ function parseResult(array $columns, array $resultSet): void
         echo str_repeat('-', $length + 2).'+';
     }
     echo "\n\n";
+}
+
+function generateJsonValue ($value, ?int $type): string
+{
+    return json_encode(match ($type) {
+        PDO::PARAM_BOOL => boolval($value),
+        PDO::PARAM_NULL => null,
+        PDO::PARAM_INT => intval($value),
+        default => $value,
+    });
 }

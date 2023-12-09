@@ -4,22 +4,27 @@
 global $db;
 
 $configSuffix = null;
-if (isset($argv[1])) {
-    preg_match('/^--config-(.*)$/', $argv[1], $matches);
-    $configSuffix = $matches[1];
-} else {
-    $configSuffix = null;
+$shouldOutputAsPDOType = false;
+foreach(array_slice($argv, 1) as $arg) {
+    if (preg_match('/^--config-(.*)$/', $arg, $matches)) {
+        $configSuffix = $matches[1];
+        continue;
+    }
+    if ($arg === '--output-as-pdo-type') {
+        $shouldOutputAsPDOType = true;
+        continue;
+    }
 }
 
 require_once __DIR__ . '/src/init.php';
 require_once __DIR__ . '/src/shell.php';
 
 try {
-    $db = init($configSuffix);
+    $db = init($configSuffix, $shouldOutputAsPDOType);
 
     echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
     
-    main();
+    main($shouldOutputAsPDOType);
 } catch (Exception $e) {
     die($e->getMessage()."\n");
 }

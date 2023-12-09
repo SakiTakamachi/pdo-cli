@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/query_handle.php';
 
-function main(): void
+function main(bool $shouldOutputAsPDOType): void
 {
     $interactive = 'pdo-cli > ';
 
@@ -18,7 +18,7 @@ function main(): void
             $toExec = $sqls[0];
             $sql = $sqls[1] ?? '';
             
-            exec_sql($toExec);
+            exec_sql($toExec, $shouldOutputAsPDOType);
         }
         echo $interactive;
     }
