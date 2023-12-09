@@ -1,16 +1,17 @@
 <?php
 
-function init(): PDO
+function init(?string $configSuffix): PDO
 {
     if (! extension_loaded('pdo')) {
         throw new Exception('PDO extension is not loaded');
     }
-    
-    if (! file_exists(__DIR__ . '/../config.json')) {
-        throw new Exception('Config file does not exist');
+
+    $configFileName = $configSuffix ? 'config-'.$configSuffix.'.json' : 'config.json';
+    if (! file_exists(__DIR__ . '/../'.$configFileName)) {
+        throw new Exception('Config file does not exist.('.$configFileName.')');
     }
     
-    $connection = json_decode(file_get_contents(__DIR__ . '/../config.json'), true);
+    $connection = json_decode(file_get_contents(__DIR__ . '/../'.$configFileName), true);
     
     if (! isset($connection['db_type'], $connection['dsn'])) {
         throw new Exception('DB type or DSN is not set');

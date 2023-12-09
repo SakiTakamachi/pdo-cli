@@ -3,10 +3,18 @@
 
 global $db;
 
+$configSuffix = null;
+if (isset($argv[1])) {
+    preg_match('/^--config-(.*)$/', $argv[1], $matches);
+    $configSuffix = $matches[1];
+} else {
+    $configSuffix = null;
+}
+
 require_once __DIR__ . '/src/init.php';
 require_once __DIR__ . '/src/shell.php';
 
-$db = init();
+$db = init($configSuffix);
 
 echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
 
