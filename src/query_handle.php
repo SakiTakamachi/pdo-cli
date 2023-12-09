@@ -83,5 +83,5 @@ function parseResult(array $columns, array $resultSet): void
     foreach ($lengths as $length) {
         echo str_repeat('-', $length + 2).'+';
     }
-    echo "\n";
+    echo "\n\n";
 }
