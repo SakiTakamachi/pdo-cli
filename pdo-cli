@@ -14,8 +14,12 @@ if (isset($argv[1])) {
 require_once __DIR__ . '/src/init.php';
 require_once __DIR__ . '/src/shell.php';
 
-$db = init($configSuffix);
+try {
+    $db = init($configSuffix);
 
-echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
-
-main();
+    echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
+    
+    main();
+} catch (Exception $e) {
+    die($e->getMessage()."\n");
+}
