@@ -32,6 +32,21 @@ pdo-cli > select 1,2,3;
 +---+---+---+
 ```
 
+## Output
+
+You can also check what type PDO recognizes each column as with the `--output-as-pdo-type` option.
+
+In that case, the output will be JSON, for example:
+
+```
+pdo-cli > select 1, '2', true;
++---+-----+------+
+| 1 | 2   | true |
++---+-----+------+
+| 1 | "2" | 1    |
++---+-----+------+
+```
+
 ## Close
 
 There are MySQL-like command and PostgreSQL-like command.
