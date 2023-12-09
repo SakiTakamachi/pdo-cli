@@ -2,15 +2,27 @@
 
 This is an interactive cli tool (Still under development) that uses PHP PDO.
 
-Please write the connection information in `config.json`.
+## Config
 
+Please refer to config-sample.json and write the connection information in `config.json` or `config-xxx.json`.
 
-Starting:
+## Start
+
+(default) When using settings from `config.json`:
 ```
 $ php pdo-cli
 ```
 
-Exec sql:
+When using `config-firebird.json`:
+```
+$ php pdo-cli --config-firebird
+```
+
+## Execute sql
+
+Please write the sql. It is executed by typing a semicolon.
+
+Exsample:
 ```
 pdo-cli > select 1,2,3;
 +---+---+---+
@@ -18,4 +30,16 @@ pdo-cli > select 1,2,3;
 +---+---+---+
 | 1 | 2 | 3 |
 +---+---+---+
+```
+
+## Close
+
+There are MySQL-like command and PostgreSQL-like command.
+
+```
+pdo-cli > quit
+Bye.
+
+pdo-cli > \q
+Bye.
 ```
