@@ -9,8 +9,8 @@ function main(): void
     $sql = '';
     echo $interactive;
     while (true) {
-        $sql .= ($sql ? ' ' : '').rtrim(fgets(STDIN));
-        if ($sql === 'quit') {
+        $sql .= ($sql ? ' ' : '').trim(fgets(STDIN));
+        if ($sql === 'quit' || $sql === '\\q') {
             break;
         }
         if (strpos($sql, ';') !== false) {
