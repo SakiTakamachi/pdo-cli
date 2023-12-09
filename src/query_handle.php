@@ -12,33 +12,44 @@ function exec_sql(string $sql): void
         return;
     }
 
-    if (preg_match('/^\\s*select/i', $sql) === 0 && $stmt !== false) {
+    $count = $stmt->columnCount();
+
+    if ($stmt !== false && $count === 0) {
         echo "OK.\n";
         return;
+    } elseif ($stmt === false) {
+        echo "Error.\n";
+        return;
     }
-    
-    $r = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
+    $r = $stmt->fetchAll(PDO::FETCH_NUM);
+
     if (! $r) {
         echo "No result.\n";
         return;
     }
 
-    parseResult($r);
+    $columns = [];
+    for ($counter = 0; $counter < $count; $counter ++) {
+        $meta = $stmt->getColumnMeta($counter);
+        $columns[] = $meta['name'];
+    }
+
+    parseResult($columns, $r);
 }
 
-function parseResult(array $resultSet): void
+function parseResult(array $columns, array $resultSet): void
 {
     $header = [];
     $lengths = [];
-    foreach ($resultSet[0] as $key => $value) {
-        $header[$key] = $key;
-        $lengths[$key] = strlen($key);
+    foreach ($columns as $key => $value) {
+        $header[$key] = $value;
+        $lengths[$key] = strlen($value);
     }
 
     foreach ($resultSet as $row) {
         foreach ($row as $key => $value) {
-            $lengths[$key] = max($lengths[$key], strlen($value));
+            $lengths[$key] = max($lengths[$key], strlen(is_null($value) ? 'NULL' : $value));
         }
     }
 
@@ -63,7 +74,7 @@ function parseResult(array $resultSet): void
     foreach ($resultSet as $row) {
         echo "|";
         foreach ($row as $key => $value) {
-            echo ' '.str_pad($value, $lengths[$key], ' ', STR_PAD_RIGHT).' |';
+            echo ' '.str_pad(is_null($value) ? 'NULL' : $value, $lengths[$key], ' ', STR_PAD_RIGHT).' |';
         }
         echo "\n";
     }
