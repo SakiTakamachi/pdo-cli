@@ -92,7 +92,7 @@ function parseResult(array $columns, array $types, array $resultSet, bool $shoul
     echo "\n\n";
 }
 
-function generateJsonValue ($value, ?int $type): string
+function generateJsonValue($value, ?int $type): string
 {
     return json_encode(match ($type) {
         PDO::PARAM_BOOL => boolval($value),
