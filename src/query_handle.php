@@ -96,7 +96,6 @@ function generateJsonValue($value, ?int $type): string
 {
     return json_encode(match ($type) {
         PDO::PARAM_BOOL => boolval($value),
-        PDO::PARAM_NULL => null,
         PDO::PARAM_INT => intval($value),
         default => $value,
     });
