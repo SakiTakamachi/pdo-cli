@@ -2,6 +2,7 @@
 <?php
 
 global $db;
+global $oldStty;
 
 $configSuffix = null;
 if (isset($argv[1])) {
@@ -12,7 +13,6 @@ if (isset($argv[1])) {
 }
 
 require_once __DIR__ . '/src/init.php';
-require_once __DIR__ . '/src/shell.php';
 
 try {
     $db = init($configSuffix);
@@ -20,6 +20,6 @@ try {
     echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
     
     main();
-} catch (Exception $e) {
+} catch (Throwable $e) {
     die($e->getMessage()."\n");
 }

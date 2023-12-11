@@ -4,28 +4,30 @@ function exec_sql(string $sql): void
 {
     /** @var PDO $db */
     global $db;
+    
+    echo "\n";
 
     try {
         $stmt = $db->query($sql);
     } catch (PDOException $e) {
-        echo $e->getMessage()."\n";
+        echo $e->getMessage()."\n\n";
         return;
     }
 
     $count = $stmt->columnCount();
 
     if ($stmt !== false && $count === 0) {
-        echo "OK.\n";
+        echo "OK.\n\n";
         return;
     } elseif ($stmt === false) {
-        echo "Error.\n";
+        echo "Error.\n\n";
         return;
     }
 
     $r = $stmt->fetchAll(PDO::FETCH_NUM);
 
     if (! $r) {
-        echo "No result.\n";
+        echo "No result.\n\n";
         return;
     }
 

@@ -1,5 +1,18 @@
 <?php
 
+require_once __DIR__ . '/key_map.php';
+require_once __DIR__ . '/shell.php';
+require_once __DIR__ . '/query_handle.php';
+
+function setStty(): void
+{
+    global $oldStty;
+    $oldStty = trim(shell_exec('stty -g < /dev/tty'));
+    if (isset($oldStty)) {
+        shell_exec('stty -echo -icanon min 1 time 0 < /dev/tty');
+    }
+}
+
 function init(?string $configSuffix): PDO
 {
     if (! extension_loaded('pdo')) {
@@ -27,5 +40,18 @@ function init(?string $configSuffix): PDO
         die($e->getMessage()."\n");
     }
     
+    setStty();
+    
     return $db;
 }
+
+function cleanup()
+{
+    global $oldStty;
+    if (isset($oldStty)) {
+        shell_exec('stty '.$oldStty.' < /dev/tty');
+    }
+    echo "Bye.\n";
+}
+
+register_shutdown_function('cleanup');
