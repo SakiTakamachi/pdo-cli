@@ -69,6 +69,23 @@ The following three color modes are available.
 
 Set these using the `color-mode` key in `config.ini`, or specify them as command arguments like `--color-mode=no-color` at runtime. The standard value is `background-color`.
 
+## Result value type
+
+You can also check what type PDO recognizes each column. To use this feature, write `result-value = pdo-type` in `config.ini` or specify `--result-value=pdo-type` in the command argument.
+
+Note: Having column type data depends on the driver implementation. If the driver does not have column type data, it will all be displayed as Str type.
+
+```
+PDOCli > select 1, '2', true;
++---+-----+------+
+| 1 | 2   | true |
++---+-----+------+
+| 1 | "2" | 1    |
++---+-----+------+
+1 row in set
+```
+
+
 ## Input stream mode
 
 If you paste a multiline string, the standard input stream will clutter the prompt display (There is no problem with operation). I have prepared a custom input stream to avoid this.

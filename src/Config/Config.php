@@ -11,6 +11,7 @@ class Config
     public const DB = 'db';
     public const DEFAULT_DB = 'default-db';
     public const RESULT_STYLE = 'result-style';
+    public const RESULT_VALUE = 'result-value';
     public const COLOR_MODE = 'color-mode';
     public const PROMPT = 'prompt';
 
@@ -18,6 +19,7 @@ class Config
         self::DB => null,
         self::DEFAULT_DB => null,
         self::RESULT_STYLE => 'mysql',
+        self::RESULT_VALUE => 'default',
         self::COLOR_MODE => 'background-color',
         self::PROMPT => 'default',
     ];
@@ -87,6 +89,11 @@ class Config
             case self::RESULT_STYLE:
                 if (! in_array($value, ['mysql'])) {
                     throw new RuntimeException('Invalid result style ['.$value.'].');
+                }
+                break;
+            case self::RESULT_VALUE:
+                if (! in_array($value, ['default', 'detect-type', 'pdo-type'])) {
+                    throw new RuntimeException('Invalid result value ['.$value.'].');
                 }
                 break;
             case self::COLOR_MODE:

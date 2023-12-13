@@ -3,17 +3,18 @@
 namespace PDOCli\Database\ResultStyle;
 
 use Generator;
+use PDOCli\Database\ResultStyle\ResultValueHandler\ResultValueHandler;
 
-class MySQLStyle extends Style
+class MySQLStyle implements Style
 {
-    public function __construct()
+    public function __construct(private ResultValueHandler $resultValueHandler)
     {
         //
     }
 
-    public function getGenerator(array $header, array $resultSet): Generator
+    public function getGenerator(array $columnMetaSet, array $resultSet): Generator
     {
-        $lengthSet = $this->getLengthSet($header, $resultSet);
+        [$lengthSet, $resultSet] = $this->resultValueHandler->parseResultSet($columnMetaSet, $resultSet);
 
         $separator = '+';
         foreach ($lengthSet as $length) {
@@ -23,8 +24,8 @@ class MySQLStyle extends Style
         yield $separator;
 
         $headerLine = '|';
-        foreach ($header as $key => $value) {
-            $headerLine .= ' '.str_pad($value, $lengthSet[$key], ' ', STR_PAD_RIGHT).' |';
+        foreach ($columnMetaSet as $key => $columnMeta) {
+            $headerLine .= ' '.str_pad($columnMeta['name'], $lengthSet[$key], ' ', STR_PAD_RIGHT).' |';
         }
         yield $headerLine;
 

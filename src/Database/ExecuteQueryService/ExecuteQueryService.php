@@ -42,12 +42,11 @@ class ExecuteQueryService
             return ExecuteQueryResult::createNoResult();
         }
 
-        $header = [];
+        $columnMetaSet = [];
         for ($counter = 0; $counter < $count; $counter ++) {
-            $meta = $stmt->getColumnMeta($counter);
-            $header[] = $meta['name'];
+            $columnMetaSet[] = $stmt->getColumnMeta($counter);
         }
 
-        return ExecuteQueryResult::createResultSet($header, $r);
+        return ExecuteQueryResult::createResultSet($columnMetaSet, $r);
     }
 }

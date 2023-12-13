@@ -9,6 +9,9 @@ use PDOCli\Config\Config;
 use PDOCli\Database\Database;
 use PDOCli\Database\ExecuteQueryService\ExecuteQueryService;
 use PDOCli\Database\ResultStyle\MySQLStyle;
+use PDOCli\Database\ResultStyle\ResultValueHandler\DefaultResultValueHandler;
+use PDOCli\Database\ResultStyle\ResultValueHandler\ResultValueWithDetectTypeHandler;
+use PDOCli\Database\ResultStyle\ResultValueHandler\ResultValueWithPDOTypeHandler;
 use PDOCli\Database\ResultStyle\Style;
 use PDOCli\Database\ResultStyle\StyleKey;
 use RuntimeException;
@@ -22,9 +25,8 @@ class DatabaseFactory
     
     public function create(Config $config): Database
     {
-        $styleKey = $config->getConfig(Config::RESULT_STYLE);
         [$db, $dbConfigName, $driverName] = $this->createPdoConncetion($config);
-        $style = $this->createStyle($styleKey);
+        $style = $this->createStyle($config);
         $executeQueryService = $this->createExecuteQueryService();
 
         return new Database($db, $style, $executeQueryService, $dbConfigName, $driverName);
@@ -89,10 +91,17 @@ class DatabaseFactory
     /**
      * @throws RuntimeException
      */
-    private function createStyle(string $styleKey): Style
-    {
-        return match ($styleKey) {
-            StyleKey::MYSQL => new MySQLStyle(),
+    private function createStyle(Config $config): Style
+    {        
+        $valueHandler = match ($config->getConfig(Config::RESULT_VALUE)) {
+            'pdo-type' => new ResultValueWithPDOTypeHandler(),
+            'detect-type' => new ResultValueWithDetectTypeHandler(),
+            'default' => new DefaultResultValueHandler(),
+            default => throw new RuntimeException('Invalid result value.'),
+        };
+
+        return match ($config->getConfig(Config::RESULT_STYLE)) {
+            StyleKey::MYSQL => new MySQLStyle($valueHandler),
             default => throw new RuntimeException('Invalid result style.'),
         };
     }

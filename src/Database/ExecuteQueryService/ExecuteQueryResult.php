@@ -23,11 +23,11 @@ class ExecuteQueryResult
         return new self(null, null, $message, ResultType::ERROR);
     }
 
-    public static function createResultSet(array $header, array $resultSet): self
+    public static function createResultSet(array $columnMetaSet, array $resultSet): self
     {
         $rowCount = count($resultSet);
         $message = $rowCount.' row'.($rowCount > 1 ? 's' : '').' in set';
-        return new self($header, $resultSet, $message, ResultType::FETCHED);
+        return new self($columnMetaSet, $resultSet, $message, ResultType::FETCHED);
     }
 
     public static function createNoResult(): self

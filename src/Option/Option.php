@@ -11,6 +11,7 @@ class Option
         'help',
         'db',
         'result-style',
+        'result-value',
         'color-mode',
     ];
 
