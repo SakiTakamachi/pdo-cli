@@ -20,6 +20,11 @@ class Database
     ) {
         //
     }
+    
+    public function getDb(): PDO
+    {
+        return $this->db;
+    }
 
     public function getDbConfigName(): string
     {
