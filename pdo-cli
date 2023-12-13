@@ -1,25 +1,39 @@
 #!/usr/bin/env php
 <?php
 
-global $db;
-global $oldStty;
+/* version 0.2.0 */
 
-$configSuffix = null;
-if (isset($argv[1])) {
-    preg_match('/^--config-(.*)$/', $argv[1], $matches);
-    $configSuffix = $matches[1];
-} else {
-    $configSuffix = null;
-}
+define('ROOT_DIR', __DIR__);
+require_once( __DIR__ . '/vendor/autoload.php');
 
-require_once __DIR__ . '/src/init.php';
+use PDOCli\Config\Config;
+use PDOCli\Console\Factory\ConsoleFactory;
+use PDOCli\Database\Factory\DatabaseFactory;
+use PDOCli\Lifecycle\Factory\LifecycleFactory;
+use PDOCli\Option\Option;
 
 try {
-    $db = init($configSuffix);
+    $consoleFactory = new ConsoleFactory();
+    $databaseFactory = new DatabaseFactory();
+    $lifecycleFactory = new LifecycleFactory();
 
-    echo "--------------- pdo-cli (c) Saki Takamachi ---------------\n\n";
-    
-    main();
+    $option = Option::parse(array_slice($argv, 1));
+
+    if ($option->hasHelp()) {
+        exit(Option::getHelp());
+    }
+
+    $config = Config::init()->mergeOption($option);
+    $database = $databaseFactory->create($config); // TODO add style option
+    $lifecycle = $lifecycleFactory->create();
+
+    $lifecycle->initialize();
+    $lifecycle->registerCleanup();
+
+    $console = $consoleFactory->create($config);
+    $console->outputLicense();
+
+    $console->run($database);
 } catch (Throwable $e) {
     die($e->getMessage()."\n");
 }
