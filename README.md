@@ -29,9 +29,9 @@ You can also specify the DB setting name as an argument to the command. If speci
 $ php pdo-cli --db=firebird
 ```
 
-## Execute sql
+## Execute Query
 
-Please write the sql. It is executed by typing a semicolon.
+Please write the query. It is executed by typing a semicolon.
 
 Exsample:
 ```

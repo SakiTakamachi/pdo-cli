@@ -13,12 +13,16 @@ class ExecuteQueryService
         //
     }
 
-    public function handle(Database $database, string $sql): ExecuteQueryResult
+    public function handle(Database $database, string $query): ExecuteQueryResult
     {
         $db = $database->getDb();
+        
+        if (! $query) {
+            return ExecuteQueryResult::createError('query is empty.');
+        }
 
         try {
-            $stmt = $db->query($sql);
+            $stmt = $db->query($query);
         } catch (PDOException $e) {
             return ExecuteQueryResult::createError($e->getMessage());
         }
