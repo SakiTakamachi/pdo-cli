@@ -1,0 +1,11 @@
+{
+    "require": {
+        "php": ">=8.2",
+        "ext-PDO": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "PDOCli\\": "src/"
+        }
+    }
+}

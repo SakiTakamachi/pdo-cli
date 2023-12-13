@@ -1,3 +1,4 @@
-/config.json
-/config*.json
-!/config-sample.json
+/config.ini
+/db.ini
+/vendor
+/composer.lock

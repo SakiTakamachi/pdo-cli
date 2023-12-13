@@ -4,18 +4,29 @@ This is an interactive cli tool (Still under development) that uses PHP PDO.
 
 ## Config
 
-Please refer to config-sample.json and write the connection information in `config.json` or `config-xxx.json`.
+~~Please refer to config-sample.json and write the connection information in `config.json` or `config-xxx.json`.~~
+
+Please write all connection information in `db.ini`. Please refer to `db-sample.ini`. You can also specify default values ​​for some settings in config.ini. Please refer to config-sample.ini.
+
+## Install
+
+It requires an autoloader, so run `composer install`.
+
+```
+$ composer install
+```
 
 ## Start
 
-(default) When using settings from `config.json`:
+Start the application with the following command: At this time, if a default value for the DB setting name is specified in `config.ini`, that setting will be used. If no default value is specified, the settings listed at the top of `db.ini` will be used.
 ```
 $ php pdo-cli
 ```
 
-When using `config-firebird.json`:
+You can also specify the DB setting name as an argument to the command. If specified, the value in `config.ini` is not used.
+(The method of specifying DB settings has been changed. ~~`--config-firebird`~~ to `--db=firebird`)
 ```
-$ php pdo-cli --config-firebird
+$ php pdo-cli --db=firebird
 ```
 
 ## Execute sql
@@ -24,12 +35,13 @@ Please write the sql. It is executed by typing a semicolon.
 
 Exsample:
 ```
-pdo-cli > select 1,2,3;
+PDOCli > select 1, 2, 3;
 +---+---+---+
 | 1 | 2 | 3 |
 +---+---+---+
 | 1 | 2 | 3 |
 +---+---+---+
+1 row in set
 ```
 
 ## Close
@@ -37,9 +49,24 @@ pdo-cli > select 1,2,3;
 There are MySQL-like command and PostgreSQL-like command.
 
 ```
-pdo-cli > quit
+PDOCli > quit
 Bye.
 
-pdo-cli > \q
+PDOCli > \q
 Bye.
 ```
+
+## Color mode
+The following three color modes are available.
+
+- no-color (Mode without color decoration)
+- text-color (Mode for changing text color)
+- background-color (Mode in which the background color of text changes)
+
+Set these using the `color-mode` key in `config.ini`, or specify them as command arguments like `--color-mode=no-color` at runtime. The standard value is `background-color`.
+
+## Input stream mode
+
+If you paste a multiline string, the standard input stream will clutter the prompt display (There is no problem with operation). I have prepared a custom input stream to avoid this.
+
+It is automatically applied in environments where the conditions for using a custom input stream are met. Currently it only works in Unix/Linux environments with `pcntl` extension installed.
