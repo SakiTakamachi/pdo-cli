@@ -15,18 +15,20 @@ class Database
         private PDO $db,
         private Style $style,
         private ExecuteQueryService $executeQueryService,
+        private string $dbConfigName,
+        private string $driverName,
     ) {
         //
     }
 
-    public function getDb(): PDO
+    public function getDbConfigName(): string
     {
-        return $this->db;
+        return $this->dbConfigName;
     }
 
-    public function getStyle(): Style
+    public function getDriverName(): string
     {
-        return $this->style;
+        return $this->driverName;
     }
 
     public function executeQuery(string $query): ExecuteQueryResult

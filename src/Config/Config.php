@@ -12,12 +12,14 @@ class Config
     public const DEFAULT_DB = 'default-db';
     public const RESULT_STYLE = 'result-style';
     public const COLOR_MODE = 'color-mode';
+    public const PROMPT = 'prompt';
 
     private const DEFAULT_CONFIGS = [
         self::DB => null,
         self::DEFAULT_DB => null,
         self::RESULT_STYLE => 'mysql',
         self::COLOR_MODE => 'background-color',
+        self::PROMPT => 'default',
     ];
 
     public static function init(): self
@@ -90,6 +92,11 @@ class Config
             case self::COLOR_MODE:
                 if (! in_array($value, ['no-color', 'text-color', 'background-color'])) {
                     throw new RuntimeException('Invalid color mode ['.$value.'].');
+                }
+                break;
+            case self::PROMPT:
+                if (! in_array($value, ['default', 'db-config-name', 'driver-name'])) {
+                    throw new RuntimeException('Invalid prompt ['.$value.'].');
                 }
                 break;
             default:

@@ -23,18 +23,18 @@ class DatabaseFactory
     public function create(Config $config): Database
     {
         $styleKey = $config->getConfig(Config::RESULT_STYLE);
-        $db = $this->createPdoConncetion($config);
+        [$db, $dbConfigName, $driverName] = $this->createPdoConncetion($config);
         $style = $this->createStyle($styleKey);
         $executeQueryService = $this->createExecuteQueryService();
 
-        return new Database($db, $style, $executeQueryService);
+        return new Database($db, $style, $executeQueryService, $dbConfigName, $driverName);
     }
 
     /**
      * @throws LogicException
      * @throws RuntimeException
      */
-    private function createPdoConncetion(Config $config): PDO
+    private function createPdoConncetion(Config $config): array
     {
         $iniFile = ROOT_DIR.'/db.ini';
         $dbConfig = null;
@@ -48,24 +48,24 @@ class DatabaseFactory
             throw new RuntimeException('There is no setting value in "db.ini".');
         }
         
-        $dbSectionName = $config->getConfig(Config::DB);
+        $dbConfigName = $config->getConfig(Config::DB);
         
-        if (is_null($dbSectionName)) {
+        if (is_null($dbConfigName)) {
             $defaultDb = $config->getConfig(Config::DEFAULT_DB);
-            $dbSectionName = $defaultDb;
+            $dbConfigName = $defaultDb;
         }
 
-        if (is_null($dbSectionName)) {
+        if (is_null($dbConfigName)) {
             $dbConfig = array_shift($dbIni);
         } else {
-            if (! array_key_exists($dbSectionName, $dbIni)) {
-                throw new RuntimeException('"'.$dbSectionName.'" not found in db.ini settings.');
+            if (! array_key_exists($dbConfigName, $dbIni)) {
+                throw new RuntimeException('"'.$dbConfigName.'" not found in db.ini settings.');
             }
-            $dbConfig = $dbIni[$dbSectionName];
+            $dbConfig = $dbIni[$dbConfigName];
         }
 
         if (! isset($dbConfig['driver'], $dbConfig['dsn'])) {
-            throw new RuntimeException('Driver or dsn settings not found in "'.$dbSectionName.'".');
+            throw new RuntimeException('Driver or dsn settings not found in "'.$dbConfigName.'".');
         }
 
         try {
@@ -78,7 +78,7 @@ class DatabaseFactory
             throw new RuntimeException($e->getMessage());
         }
 
-        return $db;
+        return [$db, $dbConfigName, $dbConfig['driver']];
     }
 
     private function createExecuteQueryService(): ExecuteQueryService

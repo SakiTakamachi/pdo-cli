@@ -56,6 +56,10 @@ PDOCli > \q
 Bye.
 ```
 
+## Prompt
+
+The prompt defaults to `PDOCli > `, but you can change this to the DB configuration name or driver name. You can set `prompt = db-config-name` or `prompt = driver-name` in `config.ini`.
+
 ## Color mode
 The following three color modes are available.
 

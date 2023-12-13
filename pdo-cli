@@ -30,7 +30,7 @@ try {
     $lifecycle->initialize();
     $lifecycle->registerCleanup();
 
-    $console = $consoleFactory->create($config);
+    $console = $consoleFactory->create($config, $database->getDbConfigName(), $database->getDriverName());
     $console->outputLicense();
 
     $console->run($database);

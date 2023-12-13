@@ -20,9 +20,14 @@ class ConsoleFactory
         //
     }
     
-    public function create(Config $config): Console
+    public function create(Config $config, string $dbConfigName, string $driverName): Console
     {
-        $prompt = new Prompt(null);
+        $prompt = match ($config->getConfig(Config::PROMPT)) {
+            'db-config-name' => new Prompt($dbConfigName),
+            'driver-name' => new Prompt($driverName),
+            'default' => new Prompt(null),
+            default => throw new LogicException('Invalid prompt.'),
+        };
 
         $outputStream = match ($config->getConfig(Config::COLOR_MODE)) {
             'no-color' => new class extends OutputStream {
