@@ -2,7 +2,7 @@
 <?php
 
 define('ROOT_DIR', __DIR__);
-define('VERSION', '0.4.0');
+define('VERSION', '0.4.1');
 require_once( __DIR__ . '/vendor/autoload.php');
 
 use PDOCli\Config\Config;

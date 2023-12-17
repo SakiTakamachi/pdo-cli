@@ -58,7 +58,7 @@ class Console
 
     public function outputInformation(): void
     {
-        $this->outputStream->write('pdo-cli (version '.VERSION.') / (c) Saki Takamachi');
+        $this->outputStream->writeWithColor('pdo-cli (version '.VERSION.') / (c) Saki Takamachi', $this->outputStream::INFO);
         $this->outputStream->nextLine();
         $this->outputStream->nextLine();
     }

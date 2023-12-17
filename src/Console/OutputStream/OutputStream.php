@@ -4,6 +4,7 @@ namespace PDOCli\Console\OutputStream;
 
 abstract class OutputStream
 {
+    public const INFO = 'info';
     public const SUCCESS = 'success';
     public const ERROR = 'error';
     public const WARNING = 'warning';
