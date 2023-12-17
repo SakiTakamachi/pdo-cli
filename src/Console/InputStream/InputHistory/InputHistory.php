@@ -2,7 +2,7 @@
 
 namespace PDOCli\Console\InputStream\InputHistory;
 
-use PDOCli\Lifecycle\Lifecycle;
+use PDOCli\GlobalState\GlobalState;
 
 class InputHistory
 {
@@ -18,7 +18,7 @@ class InputHistory
         $this->maxCount = $maxCount;
         $this->tmpHistory = $tmpHistory;
 
-        Lifecycle::setStatus('inputHistory', $this->toArray()); // TODO: separate responsibilities
+        GlobalState::setStatus(GlobalState::INPUT_HISTORY, $this->toArray());
     }
 
     public static function new(array $lines, int $maxCount): self

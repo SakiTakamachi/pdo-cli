@@ -7,7 +7,6 @@ use PDOCli\Lifecycle\CleanupService\UnixCleanupService;
 use PDOCli\Lifecycle\Lifecycle;
 use PDOCli\Lifecycle\InitializeService\DefaultInitializeService;
 use PDOCli\Lifecycle\InitializeService\UnixInitializeService;
-use PDOCli\Lifecycle\Status;
 
 class LifecycleFactory
 {
@@ -29,7 +28,6 @@ class LifecycleFactory
         return new Lifecycle(
             $initializeService,
             $cleanupService,
-            Status::new(),
         );
     }
 }

@@ -2,7 +2,7 @@
 
 namespace PDOCli\Lifecycle\InitializeService;
 
-use PDOCli\Lifecycle\Lifecycle;
+use PDOCli\GlobalState\GlobalState;
 
 class UnixInitializeService extends InitializeService
 {
@@ -15,6 +15,6 @@ class UnixInitializeService extends InitializeService
             shell_exec('stty -echo -icanon min 1 time 0 < /dev/tty');
         }
 
-        Lifecycle::setStatus('oldStty', $oldStty);
+        GlobalState::setStatus(GlobalState::OLD_STTY, $oldStty);
     }
 }
