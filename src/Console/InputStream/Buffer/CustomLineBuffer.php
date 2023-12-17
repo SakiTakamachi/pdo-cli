@@ -19,6 +19,11 @@ class CustomLineBuffer
         return new self('', '');
     }
 
+    public function setLine(string $line): self
+    {
+        return new self($line, '');
+    }
+
     public function redivide(int $cursor): self
     {
         $buffer = $this->buffer1.$this->buffer2;

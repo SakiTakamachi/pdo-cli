@@ -91,3 +91,5 @@ PDOCli > select 1, '2', true;
 If you paste a multiline string, the standard input stream will clutter the prompt display (There is no problem with operation). I have prepared a custom input stream to avoid this.
 
 It is automatically applied in environments where the conditions for using a custom input stream are met. Currently it only works in Unix/Linux environments with `pcntl` extension installed.
+
+With custom input stream, you can use the input history by inputting the up and down keys.

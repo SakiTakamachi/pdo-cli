@@ -2,12 +2,11 @@
 
 namespace PDOCli\Lifecycle\InitializeService;
 
-use PDOCli\Lifecycle\Lifecycle;
 use RuntimeException;
 
 abstract class InitializeService
 {
-    public function handle(Lifecycle $lifecycle): void
+    public function handle(): void
     {
         $this->checkEnv();
     }
@@ -20,7 +19,7 @@ abstract class InitializeService
         if (! extension_loaded('pdo')) {
             throw new RuntimeException('PDO extension is not loaded.');
         }
-        
+
         if (! extension_loaded('json')) {
             throw new RuntimeException('json extension is not loaded.');
         }

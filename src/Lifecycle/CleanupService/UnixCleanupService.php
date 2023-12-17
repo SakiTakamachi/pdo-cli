@@ -8,10 +8,20 @@ use PDOCli\Lifecycle\Lifecycle;
 
 class UnixCleanupService implements CleanupService
 {
-    public function handle(array $params): void
+    public function handle(): void
     {
-        if (isset($params['oldStty']) && is_string($params['oldStty'])) {
-            shell_exec('stty '.$params['oldStty'].' < /dev/tty');
+        if (is_array(Lifecycle::getStatus('inputHistory'))) {
+            $inputHistory = json_encode(Lifecycle::getStatus('inputHistory'));
+            if ($inputHistory) {
+                file_put_contents(
+                    ROOT_DIR.'/input-history.json',
+                    $inputHistory
+                );
+            }
+        }
+
+        if (is_string(Lifecycle::getStatus('oldStty'))) {
+            shell_exec('stty '.Lifecycle::getStatus('oldStty').' < /dev/tty');
         }
     }
 
@@ -20,12 +30,9 @@ class UnixCleanupService implements CleanupService
         exit();
     }
 
-    public function register(Lifecycle $lifecycle): void
+    public function register(): void
     {
         pcntl_signal(SIGTERM,  [$this, 'handleSigTerm']);
-
-        register_shutdown_function([$this, 'handle'], [
-            'oldStty' => $lifecycle->getStatus('oldStty'),
-        ]);
+        register_shutdown_function([$this, 'handle']);
     }
 }

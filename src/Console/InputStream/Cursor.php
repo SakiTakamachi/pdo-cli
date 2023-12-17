@@ -24,11 +24,16 @@ class Cursor
         return new self($this->cursor - 1);
     }
     
-    public function moveRight(): self
+    public function moveRight(int $step = 1): self
     {
-        return new self($this->cursor + 1);
+        return new self($this->cursor + $step);
     }
-    
+
+    public function jumpTo(int $move): self
+    {
+        return new self($move);
+    }
+
     public function toInt(): int
     {
         return $this->cursor;

@@ -4,6 +4,7 @@ namespace PDOCli\Console\InputStream;
 
 use PDOCli\Console\InputStream\Buffer\CustomLineBuffer;
 use PDOCli\Console\InputStream\Cursor;
+use PDOCli\Console\InputStream\InputHistory\InputHistory;
 use PDOCli\Console\InputStream\KeyMap;
 use PDOCli\Console\OutputStream\OutputStream;
 use PDOCli\Console\Prompt;
@@ -12,7 +13,7 @@ class UnixCustomInputStream implements InputStream
 {
     private Cursor $cursor;
     private CustomLineBuffer $lineBuffer;
-    public function __construct(private Prompt $prompt, private OutputStream $outputStream)
+    public function __construct(private Prompt $prompt, private InputHistory $inputHistory, private OutputStream $outputStream)
     {
         $this->cursor = Cursor::new();
         $this->lineBuffer = CustomLineBuffer::new();
@@ -23,6 +24,7 @@ class UnixCustomInputStream implements InputStream
         $input = '';
         $this->cursor = $this->cursor->reset();
         $this->lineBuffer = $this->lineBuffer->refresh();
+        $this->inputHistory = $this->inputHistory->refresh();
         while ($input !== PHP_EOL) {
             $input = fgetc(STDIN);
 
@@ -30,6 +32,16 @@ class UnixCustomInputStream implements InputStream
                 $input .= fgets(STDIN, 3);
 
                 if (in_array($input, [KeyMap::UP_ARROW, KeyMap::DOWN_ARROW], true)) {
+                    if ($input === KeyMap::UP_ARROW) {
+                        $this->inputHistory = $this->inputHistory->back($this->lineBuffer->toString());
+                    } else {
+                        $this->inputHistory = $this->inputHistory->forward($this->lineBuffer->toString());
+                    }
+                    $historyLine = $this->inputHistory->getLine();
+                    $this->clearLine();
+                    $this->lineBuffer = $this->lineBuffer->setLine($historyLine);
+                    $this->cursor = $this->cursor->jumpTo(strlen($historyLine));
+                    $this->refreshLine($input, $hasQueryBuffer);
                     continue;
                 }
 
@@ -62,6 +74,7 @@ class UnixCustomInputStream implements InputStream
             $this->refreshLine($input, $hasQueryBuffer);
         }
 
+        $this->inputHistory = $this->inputHistory->add(trim($this->lineBuffer->toString()));
         return $this->lineBuffer->toString();
     }
 

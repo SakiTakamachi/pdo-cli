@@ -1,9 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-/* version 0.2.0 */
-
 define('ROOT_DIR', __DIR__);
+define('VERSION', '0.4.0');
 require_once( __DIR__ . '/vendor/autoload.php');
 
 use PDOCli\Config\Config;
@@ -31,7 +30,7 @@ try {
     $lifecycle->registerCleanup();
 
     $console = $consoleFactory->create($config, $database->getDbConfigName(), $database->getDriverName());
-    $console->outputLicense();
+    $console->outputInformation();
 
     $console->run($database);
 } catch (Throwable $e) {

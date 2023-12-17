@@ -2,3 +2,4 @@
 /db.ini
 /vendor
 /composer.lock
+/input-history.json

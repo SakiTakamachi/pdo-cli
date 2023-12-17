@@ -7,12 +7,13 @@ use PDOCli\Lifecycle\InitializeService\InitializeService;
 
 class Lifecycle
 {
+    private static Status $status;
     public function __construct(
         private InitializeService $initializeService,
         private CleanupService $cleanupService,
-        private Status $status,
+        Status $status,
     ) {
-        //
+        self::$status = $status;
     }
 
     public function initialize(): void
@@ -25,13 +26,13 @@ class Lifecycle
         $this->cleanupService->register($this);
     }
 
-    public function getStatus(string $key): mixed
+    public static function getStatus(string $key): mixed
     {
-        return $this->status->getStatus($key);
+        return self::$status->getStatus($key);
     }
 
-    public function setStatus(string $key, mixed $value): void
+    public static function setStatus(string $key, mixed $value): void
     {
-        $this->status = $this->status->setStatus($key, $value);
+        self::$status = self::$status->setStatus($key, $value);
     }
 }

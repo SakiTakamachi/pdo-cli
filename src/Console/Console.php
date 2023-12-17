@@ -56,9 +56,9 @@ class Console
         $this->outputStream->write($this->prompt->getPrompt($this->queryBuffer->hasQuery()));
     }
 
-    public function outputLicense(): void
+    public function outputInformation(): void
     {
-        $this->outputStream->write('--------------- pdo-cli (c) Saki Takamachi ---------------');
+        $this->outputStream->write('pdo-cli (version '.VERSION.') / (c) Saki Takamachi');
         $this->outputStream->nextLine();
         $this->outputStream->nextLine();
     }
